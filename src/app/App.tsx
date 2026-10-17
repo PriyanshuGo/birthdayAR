@@ -61,6 +61,22 @@ export default function App() {
     };
   }, []);
 
+  // Ping backend to wake it up from Render cold start
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || "https://ar-vrbackend.onrender.com";
+    if (!apiUrl) return;
+
+    fetch(`${apiUrl}/`)
+      .then((res) => {
+        if (res.ok) {
+          console.log("[Backend] Health check OK, server is awake.");
+        }
+      })
+      .catch((err) => {
+        console.log("[Backend] Server waking up from cold start...", err);
+      });
+  }, []);
+
 
   const [mediaError, setMediaError] = useState<string | null>(null);
 
